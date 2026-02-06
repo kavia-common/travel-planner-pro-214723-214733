@@ -4,6 +4,7 @@ import { useToasts } from "../components/ToastProvider";
 import { TripItineraryTab } from "./trip/TripItineraryTab";
 import { TripNotesTab } from "./trip/TripNotesTab";
 import { TripRemindersTab } from "./trip/TripRemindersTab";
+import { TripCalendarTab } from "./trip/TripCalendarTab";
 
 /**
  * PUBLIC_INTERFACE
@@ -193,6 +194,9 @@ export function TripDetailLayout({ trips, status, usingMock, onUpdateTrip, onDel
           <NavLink to="reminders" className="tp-tab" role="tab">
             Reminders
           </NavLink>
+          <NavLink to="calendar" className="tp-tab" role="tab">
+            Calendar
+          </NavLink>
         </div>
       </div>
 
@@ -201,6 +205,7 @@ export function TripDetailLayout({ trips, status, usingMock, onUpdateTrip, onDel
           <Route path="itinerary" element={<TripItineraryTab trip={trip} />} />
           <Route path="notes" element={<TripNotesTab trip={trip} />} />
           <Route path="reminders" element={<TripRemindersTab trip={trip} />} />
+          <Route path="calendar" element={<TripCalendarTab trip={trip} />} />
           <Route path="*" element={<TripItineraryTab trip={trip} />} />
         </Routes>
       </div>
