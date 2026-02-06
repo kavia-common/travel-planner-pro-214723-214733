@@ -226,21 +226,26 @@ export function TripCalendarTab({ trip }) {
       <div className="tp-cal-layout" aria-label="Calendar layout">
         <div className="tp-cal-left">
           <div className="tp-cal-toolbar" role="toolbar" aria-label="Calendar controls">
-            <button className="tp-btn" type="button" onClick={goPrevMonth} aria-label="Previous month">
-              Prev
-            </button>
-            <div className="tp-cal-title" aria-live="polite">
-              <strong>{monthInfo.label}</strong>
-              <span className="tp-muted" style={{ fontSize: 12, marginLeft: 8 }}>
-                ({monthInfo.monthKey})
-              </span>
+            <div className="tp-cal-nav">
+              <button className="tp-icon-btn" type="button" onClick={goPrevMonth} aria-label="Previous month" title="Previous month">
+                <span aria-hidden="true">‹</span>
+              </button>
+
+              <div className="tp-cal-title" aria-live="polite">
+                <strong>{monthInfo.label}</strong>
+                <span className="tp-muted tp-cal-title-sub">({monthInfo.monthKey})</span>
+              </div>
+
+              <button className="tp-icon-btn" type="button" onClick={goNextMonth} aria-label="Next month" title="Next month">
+                <span aria-hidden="true">›</span>
+              </button>
             </div>
-            <button className="tp-btn" type="button" onClick={goNextMonth} aria-label="Next month">
-              Next
-            </button>
-            <button className="tp-btn tp-btn-primary" type="button" onClick={goToday} aria-label="Jump to today">
-              Today
-            </button>
+
+            <div className="tp-cal-actions">
+              <button className="tp-btn tp-btn-primary" type="button" onClick={goToday} aria-label="Jump to today">
+                Today
+              </button>
+            </div>
           </div>
 
           {anyPending && itineraryState.items.length === 0 && notesState.notes.length === 0 && remindersState.reminders.length === 0 ? (

@@ -32,6 +32,10 @@ export function CalendarGrid({ monthKey, selectedDateKey, countsByDate, onSelect
           const total = (counts.itinerary || 0) + (counts.notes || 0) + (counts.reminders || 0);
           const isSelected = selectedDateKey === c.dateKey;
 
+          const itineraryCount = counts.itinerary || 0;
+          const notesCount = counts.notes || 0;
+          const remindersCount = counts.reminders || 0;
+
           return (
             <button
               key={c.dateKey}
@@ -43,8 +47,9 @@ export function CalendarGrid({ monthKey, selectedDateKey, countsByDate, onSelect
                 isSelected ? "is-selected" : "",
               ].join(" ")}
               onClick={() => onSelectDate?.(c.dateKey)}
+              // Accessibility: make selection explicit for assistive tech.
+              aria-selected={isSelected}
               aria-label={`Select ${c.dateKey}${total ? `, ${total} items` : ""}`}
-              aria-pressed={isSelected}
             >
               <div className="tp-cal-cell-top">
                 <span className="tp-cal-daynum" aria-hidden="true">
@@ -52,25 +57,43 @@ export function CalendarGrid({ monthKey, selectedDateKey, countsByDate, onSelect
                 </span>
 
                 {total > 0 ? (
-                  <span className="tp-cal-total" aria-label={`${total} total items`}>
+                  <span className="tp-cal-total" aria-label={`${total} total items`} title={`${total} total items`}>
                     {total}
                   </span>
                 ) : null}
               </div>
 
-              {total > 0 ? (
-                <div className="tp-cal-badges" aria-hidden="true">
-                  {counts.itinerary ? (
-                    <span className="tp-cal-dot tp-cal-dot-itinerary" title="Itinerary" />
-                  ) : null}
-                  {counts.notes ? <span className="tp-cal-dot tp-cal-dot-notes" title="Notes" /> : null}
-                  {counts.reminders ? (
-                    <span className="tp-cal-dot tp-cal-dot-reminders" title="Reminders" />
-                  ) : null}
-                </div>
-              ) : (
-                <div className="tp-cal-badges" aria-hidden="true" />
-              )}
+              <div className="tp-cal-badges" aria-label="Day item counts">
+                {itineraryCount ? (
+                  <span
+                    className="tp-cal-pill tp-cal-pill-itinerary"
+                    title={`${itineraryCount} itinerary item${itineraryCount === 1 ? "" : "s"}`}
+                    aria-label={`${itineraryCount} itinerary item${itineraryCount === 1 ? "" : "s"}`}
+                  >
+                    Itin <span className="tp-cal-pill-count">{itineraryCount}</span>
+                  </span>
+                ) : null}
+
+                {notesCount ? (
+                  <span
+                    className="tp-cal-pill tp-cal-pill-notes"
+                    title={`${notesCount} note${notesCount === 1 ? "" : "s"}`}
+                    aria-label={`${notesCount} note${notesCount === 1 ? "" : "s"}`}
+                  >
+                    Notes <span className="tp-cal-pill-count">{notesCount}</span>
+                  </span>
+                ) : null}
+
+                {remindersCount ? (
+                  <span
+                    className="tp-cal-pill tp-cal-pill-reminders"
+                    title={`${remindersCount} reminder${remindersCount === 1 ? "" : "s"}`}
+                    aria-label={`${remindersCount} reminder${remindersCount === 1 ? "" : "s"}`}
+                  >
+                    Rem <span className="tp-cal-pill-count">{remindersCount}</span>
+                  </span>
+                ) : null}
+              </div>
             </button>
           );
         })}
