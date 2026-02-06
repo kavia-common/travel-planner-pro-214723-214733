@@ -78,6 +78,33 @@ export const apiClient = {
   },
 
   /**
+   * Perform a PATCH request (safe-gated).
+   * @param {string} url
+   * @param {any} body
+   * @param {import("axios").AxiosRequestConfig} [config]
+   */
+  async patch(url, body, config) {
+    if (!isBackendEnabled()) {
+      return { data: null, mocked: true };
+    }
+    const res = await http.patch(url, body, config);
+    return { data: res.data, mocked: false };
+  },
+
+  /**
+   * Perform a DELETE request (safe-gated).
+   * @param {string} url
+   * @param {import("axios").AxiosRequestConfig} [config]
+   */
+  async delete(url, config) {
+    if (!isBackendEnabled()) {
+      return { data: null, mocked: true };
+    }
+    const res = await http.delete(url, config);
+    return { data: res.data, mocked: false };
+  },
+
+  /**
    * Expose baseURL for debugging/UI display.
    */
   getBaseUrl() {

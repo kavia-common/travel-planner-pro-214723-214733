@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { TripsList } from "./components/TripsList";
 import { ToastProvider, useToasts } from "./components/ToastProvider";
-import { mockTrips } from "./mocks/data";
 import { DestinationSearchPage } from "./pages/DestinationSearchPage";
 import { TripDetailLayout } from "./pages/TripDetailLayout";
 import { TripsHomePage } from "./pages/TripsHomePage";
 import { getApiBaseUrl, isBackendEnabled } from "./config/env";
+import { useTrips } from "./hooks/useTrips";
 
 function TopbarStatus() {
   const { pushToast } = useToasts();
@@ -48,7 +48,7 @@ function App() {
   /**
    * Main app entry component with layout + routes.
    */
-  const trips = useMemo(() => mockTrips, []);
+  const tripsState = useTrips();
 
   return (
     <ToastProvider>
@@ -63,7 +63,14 @@ function App() {
             </div>
           </div>
 
-          <TripsList trips={trips} />
+          <TripsList
+            trips={tripsState.trips}
+            status={tripsState.status}
+            error={tripsState.error}
+            usingMock={tripsState.usingMock}
+            onCreateTrip={tripsState.createTrip}
+            onReload={tripsState.reload}
+          />
         </aside>
 
         <main className="tp-main">
@@ -74,11 +81,34 @@ function App() {
           <section className="tp-content" aria-label="Main content">
             <Routes>
               <Route path="/" element={<Navigate to="/trips" replace />} />
-              <Route path="/trips" element={<TripsHomePage trips={trips} />} />
+              <Route
+                path="/trips"
+                element={
+                  <TripsHomePage
+                    trips={tripsState.trips}
+                    status={tripsState.status}
+                    error={tripsState.error}
+                    usingMock={tripsState.usingMock}
+                    onCreateTrip={tripsState.createTrip}
+                  />
+                }
+              />
               <Route path="/destinations" element={<DestinationSearchPage />} />
 
               <Route path="/trips/:tripId" element={<Navigate to="itinerary" replace />} />
-              <Route path="/trips/:tripId/*" element={<TripDetailLayout trips={trips} />} />
+              <Route
+                path="/trips/:tripId/*"
+                element={
+                  <TripDetailLayout
+                    trips={tripsState.trips}
+                    status={tripsState.status}
+                    usingMock={tripsState.usingMock}
+                    onUpdateTrip={tripsState.updateTrip}
+                    onDeleteTrip={tripsState.deleteTrip}
+                    onReload={tripsState.reload}
+                  />
+                }
+              />
 
               <Route
                 path="*"
@@ -102,3 +132,4 @@ function App() {
 }
 
 export default App;
+
